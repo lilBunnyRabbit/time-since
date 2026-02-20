@@ -1,0 +1,26 @@
+# Time Since - Svelte 5 Project
+
+## Project Overview
+A PWA that allows you to track time since events happened, reset timers, and view history of resets with time between them. Built with Svelte 5, TypeScript, and Tailwind CSS.
+
+## Svelte 5 Runes (REQUIRED)
+
+**Use:** `$props()`, `$state()`, `$derived()`, `$effect()`, `$bindable()`  
+**Forbidden:** `export let`, `$:` reactive statements, legacy lifecycle hooks, `createEventDispatcher()`
+
+```svelte
+<script lang="ts">
+  interface Props { name: string; optional?: string; }
+  let { name, optional = "default" }: Props = $props();
+  let count = $state(0);
+  let doubled = $derived(count * 2);
+  $effect(() => console.log(count));
+</script>
+```
+
+## Code Style
+- TypeScript with `<script lang="ts">`
+- Explicit prop interfaces (no `any`)
+- Icons: `phosphor-svelte` (no "Icon" suffix) or `@lucide/svelte`
+
+**NO LEGACY SVELTE PATTERNS. Use runes only.**
