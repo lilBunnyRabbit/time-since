@@ -9,6 +9,16 @@ export function format_elapsed(ms: number): string {
   return `${pad(days)}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
+export function to_datetime_local(timestamp: number): string {
+  const d = new Date(timestamp);
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+export function from_datetime_local(value: string): number {
+  return new Date(value).getTime();
+}
+
 export function format_date(timestamp: number): string {
   const d = new Date(timestamp);
   const pad = (n: number) => n.toString().padStart(2, "0");

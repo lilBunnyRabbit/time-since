@@ -71,6 +71,13 @@ class TimerStore {
     this.#save();
   }
 
+  set_start(id: string, timestamp: number) {
+    const timer = this.timers.find((t) => t.id === id);
+    if (!timer || !timer.current_start) return;
+    timer.current_start = timestamp;
+    this.#save();
+  }
+
   remove(id: string) {
     const idx = this.timers.findIndex((t) => t.id === id);
     if (idx !== -1) this.timers.splice(idx, 1);

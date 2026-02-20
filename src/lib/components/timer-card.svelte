@@ -2,7 +2,7 @@
   import { X, RotateCcw, Pause, Play, Trash2 } from "@lucide/svelte";
   import type { TimerData } from "$lib/timers.svelte";
   import { timer_store } from "$lib/timers.svelte";
-  import { format_elapsed, format_date } from "$lib/utils";
+  import { format_elapsed, format_date, to_datetime_local, from_datetime_local } from "$lib/utils";
 
   interface Props {
     timer: TimerData;
@@ -106,6 +106,21 @@
       >
         {format_elapsed(elapsed)}
       </span>
+
+      {#if is_running && timer.current_start}
+        <label class="flex flex-col items-center gap-1">
+          <span class="text-xs text-foreground/40">Started at</span>
+          <input
+            type="datetime-local"
+            value={to_datetime_local(timer.current_start)}
+            onchange={(e) => {
+              const ts = from_datetime_local(e.currentTarget.value);
+              if (!isNaN(ts)) timer_store.set_start(timer.id, ts);
+            }}
+            class="rounded-lg border border-foreground/10 bg-transparent px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary/50 transition-colors"
+          />
+        </label>
+      {/if}
 
       <div class="flex items-center gap-2">
         {#if is_running}
