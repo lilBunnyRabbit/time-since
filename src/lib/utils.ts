@@ -1,3 +1,7 @@
+export function haptic(ms = 15) {
+  if (navigator?.vibrate) navigator.vibrate(ms);
+}
+
 export function format_elapsed(ms: number): string {
   if (ms < 0) ms = 0;
   const total_seconds = Math.floor(ms / 1000);

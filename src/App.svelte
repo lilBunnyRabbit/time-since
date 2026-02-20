@@ -2,6 +2,7 @@
   import "./app.css";
   import { Plus } from "@lucide/svelte";
   import { timer_store } from "$lib/timers.svelte";
+  import { haptic } from "$lib/utils";
   import TimerCard from "$lib/components/timer-card.svelte";
 
   let new_name = $state("");
@@ -10,6 +11,7 @@
     e.preventDefault();
     const name = new_name.trim();
     if (!name) return;
+    haptic(20);
     timer_store.create(name);
     new_name = "";
   }
@@ -27,7 +29,10 @@
       />
       <button
         type="submit"
-        class="flex items-center justify-center size-11 rounded-xl border border-foreground/10 text-primary hover:bg-primary/10 transition-colors shrink-0"
+        class="flex items-center justify-center size-12 shrink-0 select-none rounded-xl border border-foreground/10 text-primary
+               shadow-[0_2px_0_0_rgba(255,255,255,0.06)]
+               transition-all duration-100
+               active:scale-90 active:brightness-125 active:bg-primary/20 active:shadow-none active:translate-y-[2px]"
       >
         <Plus class="size-5" />
       </button>
