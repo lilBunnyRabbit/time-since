@@ -35,7 +35,7 @@
   const btn =
     "flex items-center justify-center select-none transition-all duration-100 active:scale-90 active:brightness-125";
   const btn_icon =
-    `${btn} rounded-lg border border-foreground/20 shadow-[0_2px_0_0_rgba(255,255,255,0.06)] active:shadow-none active:translate-y-[2px]`;
+    `${btn} rounded-lg shadow-[0_2px_0_0_rgba(255,255,255,0.06)] active:shadow-none active:translate-y-[2px]`;
 </script>
 
 <!-- Card -->
@@ -80,7 +80,7 @@
             haptic();
             timer_store.restart(timer.id);
           }}
-          class="{btn_icon} size-12 text-primary active:bg-primary/20"
+          class="{btn_icon} size-12 bg-primary text-background active:brightness-125"
           title="Restart"
         >
           <RotateCcw class="size-5" />
@@ -91,7 +91,7 @@
             haptic();
             timer_store.stop(timer.id);
           }}
-          class="{btn_icon} size-12 text-accent active:bg-accent/20"
+          class="{btn_icon} size-12 bg-accent text-background active:brightness-125"
           title="Stop"
         >
           <Pause class="size-5" />
@@ -103,7 +103,7 @@
             haptic();
             timer_store.start(timer.id);
           }}
-          class="{btn_icon} size-12 text-primary active:bg-primary/20"
+          class="{btn_icon} size-12 bg-primary text-background active:brightness-125"
           title="Start"
         >
           <Play class="size-5" />
@@ -124,7 +124,7 @@
           haptic(10);
           open = false;
         }}
-        class="{btn_icon} size-10 text-foreground/50 active:bg-foreground/10"
+        class="{btn_icon} size-10 bg-foreground/10 text-foreground/50 active:brightness-125"
       >
         <X class="size-5" />
       </button>
@@ -162,7 +162,7 @@
               haptic(25);
               timer_store.restart(timer.id);
             }}
-            class="{btn_icon} size-14 text-primary active:bg-primary/20"
+            class="{btn_icon} size-14 bg-primary text-background active:brightness-125"
             title="Restart"
           >
             <RotateCcw class="size-6" />
@@ -172,7 +172,7 @@
               haptic(25);
               timer_store.stop(timer.id);
             }}
-            class="{btn_icon} size-14 text-accent active:bg-accent/20"
+            class="{btn_icon} size-14 bg-accent text-background active:brightness-125"
             title="Stop"
           >
             <Pause class="size-6" />
@@ -183,7 +183,7 @@
               haptic(25);
               timer_store.start(timer.id);
             }}
-            class="{btn_icon} size-14 text-primary active:bg-primary/20"
+            class="{btn_icon} size-14 bg-primary text-background active:brightness-125"
             title="Start"
           >
             <Play class="size-6" />
@@ -222,9 +222,9 @@
           timer_store.remove(timer.id);
           open = false;
         }}
-        class="{btn} w-full py-3 rounded-xl border border-secondary/30 text-secondary/70
+        class="{btn} w-full py-3 rounded-xl bg-secondary text-background
                shadow-[0_2px_0_0_rgba(255,255,255,0.06)] active:shadow-none active:translate-y-[2px]
-               active:text-secondary active:bg-secondary/10 text-sm gap-2"
+               active:brightness-125 text-sm gap-2"
       >
         <Trash2 class="size-4" />
         Delete Timer
