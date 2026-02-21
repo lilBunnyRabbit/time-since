@@ -215,6 +215,7 @@
     <div class="px-4 py-4">
       <button
         onclick={() => {
+          if (!confirm("Delete this timer? This action cannot be undone.")) return;
           haptic(40);
           timer_store.remove(timer.id);
           open = false;
