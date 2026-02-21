@@ -115,7 +115,7 @@
 
 <!-- Full-screen detail -->
 {#if open}
-  <div class="fixed inset-0 z-50 bg-background safe-area-pad flex flex-col overflow-y-auto">
+  <div class="fixed inset-0 z-50 bg-background safe-area-pad flex flex-col">
     <!-- Top bar -->
     <div class="flex items-center justify-between px-4 py-3">
       <h2 class="text-lg font-bold">{timer.name}</h2>
@@ -193,18 +193,20 @@
     </div>
 
     <!-- Session log -->
-    <div class="flex-1 px-4">
+    <div class="flex-1 min-h-0 flex flex-col px-4">
       {#if timer.sessions.length > 0}
         <h3 class="text-sm text-foreground/50 mb-2">Sessions</h3>
-        <div class="flex flex-col rounded-xl border border-foreground/10 px-4 py-1">
-          {#each timer.sessions.toReversed() as session}
-            <div class="flex justify-between items-center py-2 text-sm">
-              <span class="text-foreground/50">{format_date(session.started_at)}</span>
-              <span class="font-mono tabular-nums text-foreground/70">
-                {format_elapsed(session.ended_at - session.started_at)}
-              </span>
-            </div>
-          {/each}
+        <div class="flex-1 min-h-0 flex flex-col rounded-xl border border-foreground/10 px-4">
+          <div class="flex-1 min-h-0 overflow-y-auto py-1">
+            {#each timer.sessions.toReversed() as session}
+              <div class="flex justify-between items-center py-2 text-sm">
+                <span class="text-foreground/50">{format_date(session.started_at)}</span>
+                <span class="font-mono tabular-nums text-foreground/70">
+                  {format_elapsed(session.ended_at - session.started_at)}
+                </span>
+              </div>
+            {/each}
+          </div>
         </div>
       {:else}
         <p class="text-sm text-foreground/30 text-center py-4">No sessions logged yet.</p>
