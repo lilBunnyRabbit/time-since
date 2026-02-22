@@ -90,6 +90,13 @@ class TimerStore {
     this.#save();
   }
 
+  rename(id: string, name: string) {
+    const timer = this.timers.find((t) => t.id === id);
+    if (!timer) return;
+    timer.name = name;
+    this.#save();
+  }
+
   remove(id: string) {
     const idx = this.timers.findIndex((t) => t.id === id);
     if (idx !== -1) this.timers.splice(idx, 1);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { X, RotateCcw, Pause, Play, Trash2 } from "@lucide/svelte";
+  import { X, RotateCcw, Pause, Play, Trash2, Pencil } from "@lucide/svelte";
   import type { TimerData } from "$lib/timers.svelte";
   import { timer_store } from "$lib/timers.svelte";
   import {
@@ -122,14 +122,26 @@
 {#if open}
   <div class="fixed inset-0 z-50 bg-background-dark safe-area-pad flex flex-col">
     <!-- Top bar -->
-    <div class="flex items-center justify-between px-4 py-3">
-      <h2 class="text-lg font-bold">{timer.name}</h2>
+    <div class="flex items-center px-4 py-3 gap-2">
+      <h2 class="text-lg font-bold truncate flex-1 min-w-0">{timer.name}</h2>
+      <button
+        onclick={() => {
+          const name = prompt("Rename timer:", timer.name);
+          if (name && name.trim()) {
+            haptic(10);
+            timer_store.rename(timer.id, name.trim());
+          }
+        }}
+        class="{btn_icon} size-10 shrink-0 bg-foreground/10 text-foreground/50 active:brightness-125"
+      >
+        <Pencil class="size-5" />
+      </button>
       <button
         onclick={() => {
           haptic(10);
           open = false;
         }}
-        class="{btn_icon} size-10 bg-foreground/10 text-foreground/50 active:brightness-125"
+        class="{btn_icon} size-10 shrink-0 bg-foreground/10 text-foreground/50 active:brightness-125"
       >
         <X class="size-5" />
       </button>
