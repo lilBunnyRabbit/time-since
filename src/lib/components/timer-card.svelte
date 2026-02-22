@@ -198,12 +198,23 @@
         <h3 class="text-sm text-foreground/50 mb-2">Sessions</h3>
         <div class="flex-1 min-h-0 flex flex-col rounded-xl border border-foreground/10 px-4">
           <div class="flex-1 min-h-0 overflow-y-auto py-1">
-            {#each timer.sessions.toReversed() as session}
-              <div class="flex justify-between items-center py-2 text-sm">
+            {#each timer.sessions.toReversed() as session, ri}
+              {@const real_index = timer.sessions.length - 1 - ri}
+              <div class="flex items-center py-2 text-sm gap-2">
                 <span class="text-foreground/50">{format_date(session.started_at)}</span>
-                <span class="font-mono tabular-nums text-foreground/70">
+                <span class="font-mono tabular-nums text-foreground/70 ml-auto">
                   {format_elapsed(session.ended_at - session.started_at)}
                 </span>
+                <button
+                  onclick={() => {
+                    if (!confirm("Delete this session?")) return;
+                    haptic(10);
+                    timer_store.remove_session(timer.id, real_index);
+                  }}
+                  class="{btn} size-6 rounded text-foreground/20 active:text-secondary active:brightness-125"
+                >
+                  <X class="size-3.5" />
+                </button>
               </div>
             {/each}
           </div>

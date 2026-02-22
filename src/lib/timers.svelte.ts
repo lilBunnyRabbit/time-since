@@ -78,6 +78,18 @@ class TimerStore {
     this.#save();
   }
 
+  remove_session(id: string, session_index: number) {
+    const timer = this.timers.find((t) => t.id === id);
+    if (!timer || session_index < 0 || session_index >= timer.sessions.length) return;
+    const session = timer.sessions[session_index];
+    const is_latest = session_index === timer.sessions.length - 1;
+    timer.sessions.splice(session_index, 1);
+    if (is_latest && timer.current_start === null) {
+      timer.current_start = session.started_at;
+    }
+    this.#save();
+  }
+
   remove(id: string) {
     const idx = this.timers.findIndex((t) => t.id === id);
     if (idx !== -1) this.timers.splice(idx, 1);
