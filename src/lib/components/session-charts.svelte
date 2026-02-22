@@ -54,19 +54,19 @@
   <div class="flex flex-col gap-4">
     <!-- Stats -->
     <div class="grid grid-cols-2 gap-2">
-      <div class="rounded-lg border border-foreground/10 px-3 py-2">
+      <div class="rounded-lg bg-background border border-foreground/15 px-3 py-2">
         <div class="text-[10px] text-foreground/40 uppercase tracking-wider">Average</div>
         <div class="font-mono text-sm tabular-nums text-foreground/70">{format_elapsed(avg_duration)}</div>
       </div>
-      <div class="rounded-lg border border-foreground/10 px-3 py-2">
+      <div class="rounded-lg bg-background border border-foreground/15 px-3 py-2">
         <div class="text-[10px] text-foreground/40 uppercase tracking-wider">Total</div>
         <div class="font-mono text-sm tabular-nums text-foreground/70">{format_elapsed(total_duration)}</div>
       </div>
-      <div class="rounded-lg border border-foreground/10 px-3 py-2">
+      <div class="rounded-lg bg-background border border-foreground/15 px-3 py-2">
         <div class="text-[10px] text-foreground/40 uppercase tracking-wider">Shortest</div>
         <div class="font-mono text-sm tabular-nums text-foreground/70">{format_elapsed(min_duration)}</div>
       </div>
-      <div class="rounded-lg border border-foreground/10 px-3 py-2">
+      <div class="rounded-lg bg-background border border-foreground/15 px-3 py-2">
         <div class="text-[10px] text-foreground/40 uppercase tracking-wider">Longest</div>
         <div class="font-mono text-sm tabular-nums text-foreground/70">{format_elapsed(max_duration)}</div>
       </div>
@@ -76,7 +76,7 @@
     {#if sessions.length > 1}
       <div class="flex flex-col gap-1">
         <h4 class="text-xs text-foreground/40 uppercase tracking-wider">Session Durations</h4>
-        <div class="rounded-lg border border-foreground/10 p-3">
+        <div class="rounded-lg bg-background border border-foreground/15 p-3">
           <div class="flex flex-col gap-1">
             {#each chart_sessions as s, i}
               <div class="group flex items-center gap-2">
@@ -102,7 +102,7 @@
     <!-- Activity heatmap -->
     <div class="flex flex-col gap-1">
       <h4 class="text-xs text-foreground/40 uppercase tracking-wider">Activity Heatmap</h4>
-      <div class="rounded-lg border border-foreground/10 p-3 overflow-x-auto">
+      <div class="rounded-lg bg-background border border-foreground/15 p-3 overflow-x-auto">
         <svg viewBox="0 0 {24 * 14 + 30} {7 * 14 + 16}" class="w-full" style="min-width: 320px;">
           <!-- Hour labels -->
           {#each Array(24) as _, h}

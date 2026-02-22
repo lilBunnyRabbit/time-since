@@ -20,6 +20,7 @@
   let open = $state(false);
   let card_pressed = $state(false);
   let now = $state(Date.now());
+  let scrolled = $state(false);
 
   const is_running = $derived(timer.current_start !== null);
   const elapsed = $derived(timer.current_start ? now - timer.current_start : 0);
@@ -42,8 +43,9 @@
 <!-- Card -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-  class="flex flex-col rounded-xl border border-foreground/10 px-4 py-3 cursor-pointer select-none
-         transition-all duration-100 hover:bg-foreground/5 {card_pressed ? 'scale-[0.98] bg-foreground/5' : ''}"
+  class="flex flex-col rounded-xl px-4 py-3 cursor-pointer select-none border
+         transition-all duration-200 hover:brightness-110 {card_pressed ? 'scale-[0.98] brightness-110' : ''}
+         {is_running ? 'bg-primary border-primary/50 text-background' : 'bg-background border-foreground/15'}"
   onpointerdown={(e) => {
     if ((e.target as HTMLElement).closest("button")) return;
     card_pressed = true;
@@ -68,7 +70,7 @@
 
   <div class="flex items-center gap-3 mt-2">
     <span
-      class="font-mono text-2xl tabular-nums {is_running ? 'text-primary' : 'text-foreground/30'}"
+      class="font-mono text-2xl tabular-nums {is_running ? 'text-background' : 'text-foreground/30'}"
     >
       {format_elapsed(elapsed)}
     </span>
@@ -78,10 +80,11 @@
         <button
           onclick={(e) => {
             e.stopPropagation();
+            if (!confirm(`Restart "${timer.name}"?`)) return;
             haptic();
             timer_store.restart(timer.id);
           }}
-          class="{btn_icon} size-12 bg-primary text-background active:brightness-125"
+          class="{btn_icon} size-12 bg-background text-secondary active:brightness-125"
           title="Restart"
         >
           <RotateCcw class="size-5" />
@@ -89,10 +92,11 @@
         <button
           onclick={(e) => {
             e.stopPropagation();
+            if (!confirm(`Stop "${timer.name}"?`)) return;
             haptic();
             timer_store.stop(timer.id);
           }}
-          class="{btn_icon} size-12 bg-accent text-background active:brightness-125"
+          class="{btn_icon} size-12 bg-background text-accent active:brightness-125"
           title="Stop"
         >
           <Pause class="size-5" />
@@ -116,7 +120,7 @@
 
 <!-- Full-screen detail -->
 {#if open}
-  <div class="fixed inset-0 z-50 bg-background safe-area-pad flex flex-col">
+  <div class="fixed inset-0 z-50 bg-background-dark safe-area-pad flex flex-col">
     <!-- Top bar -->
     <div class="flex items-center justify-between px-4 py-3">
       <h2 class="text-lg font-bold">{timer.name}</h2>
@@ -132,34 +136,26 @@
     </div>
 
     <!-- Timer + controls -->
-    <div class="flex flex-col items-center gap-4 px-4 py-6">
+    <div
+      class="flex flex-col items-center px-4 border-b border-foreground/30 overflow-hidden transition-all duration-300 ease-in-out
+             {scrolled ? 'gap-0 py-2' : 'gap-4 py-6'}"
+    >
       <span
-        class="font-mono text-3xl tabular-nums {is_running
+        class="font-mono tabular-nums transition-all duration-300 ease-in-out {is_running
           ? 'text-primary'
-          : 'text-foreground/30'}"
+          : 'text-foreground/30'} {scrolled ? 'text-lg' : 'text-3xl'}"
       >
         {format_elapsed(elapsed)}
       </span>
 
-      {#if is_running && timer.current_start}
-        <label class="flex flex-col items-center gap-1">
-          <span class="text-xs text-foreground/40">Started at</span>
-          <input
-            type="datetime-local"
-            value={to_datetime_local(timer.current_start)}
-            onchange={(e) => {
-              const ts = from_datetime_local(e.currentTarget.value);
-              if (!isNaN(ts)) timer_store.set_start(timer.id, ts);
-            }}
-            class="rounded-lg border border-foreground/10 bg-transparent px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary/50 transition-colors"
-          />
-        </label>
-      {/if}
-
-      <div class="flex items-center gap-3">
+      <div
+        class="flex items-center gap-3 transition-all duration-300 ease-in-out origin-top
+               {scrolled ? 'max-h-0 opacity-0 scale-y-0' : 'max-h-20 opacity-100 scale-y-100'}"
+      >
         {#if is_running}
           <button
             onclick={() => {
+              if (!confirm(`Restart "${timer.name}"?`)) return;
               haptic(25);
               timer_store.restart(timer.id);
             }}
@@ -170,6 +166,7 @@
           </button>
           <button
             onclick={() => {
+              if (!confirm(`Stop "${timer.name}"?`)) return;
               haptic(25);
               timer_store.stop(timer.id);
             }}
@@ -193,12 +190,31 @@
       </div>
     </div>
 
-    <!-- Charts + Session log -->
-    <div class="flex-1 min-h-0 flex flex-col px-4 overflow-y-auto gap-4">
+    <!-- Scrollable content -->
+    <div
+      class="flex-1 min-h-0 flex flex-col px-4 py-4 overflow-y-auto gap-4"
+      onscroll={(e) => {
+        scrolled = e.currentTarget.scrollTop > 10;
+      }}
+    >
+      {#if is_running && timer.current_start}
+        <label class="flex flex-col items-center gap-1 rounded-xl bg-background border border-foreground/15 px-4 py-3">
+          <span class="text-xs text-foreground/40">Started at</span>
+          <input
+            type="datetime-local"
+            value={to_datetime_local(timer.current_start)}
+            onchange={(e) => {
+              const ts = from_datetime_local(e.currentTarget.value);
+              if (!isNaN(ts)) timer_store.set_start(timer.id, ts);
+            }}
+            class="rounded-lg bg-transparent px-3 py-1.5 text-sm text-foreground outline-none"
+          />
+        </label>
+      {/if}
       {#if timer.sessions.length > 0}
         <SessionCharts sessions={timer.sessions} />
         <h3 class="text-sm text-foreground/50">Sessions</h3>
-        <div class="flex flex-col rounded-xl border border-foreground/10 px-4">
+        <div class="flex flex-col rounded-xl bg-background border border-foreground/15 px-4">
           <div class="py-1">
             {#each timer.sessions.toReversed() as session, ri}
               {@const real_index = timer.sessions.length - 1 - ri}
@@ -209,7 +225,7 @@
                 </span>
                 <button
                   onclick={() => {
-                    if (!confirm("Delete this session?")) return;
+                    if (!confirm(`Delete session from "${timer.name}"?`)) return;
                     haptic(10);
                     timer_store.remove_session(timer.id, real_index);
                   }}
@@ -227,10 +243,10 @@
     </div>
 
     <!-- Delete -->
-    <div class="px-4 py-4">
+    <div class="px-4 py-4 border-t border-foreground/30">
       <button
         onclick={() => {
-          if (!confirm("Delete this timer? This action cannot be undone.")) return;
+          if (!confirm(`Delete "${timer.name}"? This action cannot be undone.`)) return;
           haptic(40);
           timer_store.remove(timer.id);
           open = false;

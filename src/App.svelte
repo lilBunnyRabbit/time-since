@@ -7,6 +7,16 @@
 
   let new_name = $state("");
 
+  const sorted_timers = $derived(
+    [...timer_store.timers].sort((a, b) => {
+      const a_running = a.current_start !== null;
+      const b_running = b.current_start !== null;
+      if (a_running !== b_running) return a_running ? -1 : 1;
+      if (a_running && b_running) return a.current_start! - b.current_start!;
+      return 0;
+    })
+  );
+
   function create_timer(e: SubmitEvent) {
     e.preventDefault();
     const name = new_name.trim();
@@ -17,35 +27,37 @@
   }
 </script>
 
-<div class="h-full overflow-y-auto safe-area-pad">
-  <div class="mx-auto max-w-2xl p-4 flex flex-col gap-4">
-    <h1 class="text-xl font-bold text-center text-foreground">Time Since</h1>
+<div class="h-full flex flex-col safe-area-pad">
+  <div class="flex-1 min-h-0 overflow-y-auto">
+    <div class="mx-auto max-w-2xl p-4 flex flex-col gap-4">
+      <div class="flex flex-col gap-4">
+        {#each sorted_timers as timer (timer.id)}
+          <TimerCard {timer} />
+        {/each}
+      </div>
 
-    <form onsubmit={create_timer} class="flex gap-2">
+      {#if timer_store.timers.length === 0}
+        <p class="text-center text-foreground/30 py-8">No timers yet.</p>
+      {/if}
+    </div>
+  </div>
+
+  <div class="shrink-0 bg-background border-t border-foreground/30 px-4 py-3">
+    <form onsubmit={create_timer} class="mx-auto max-w-2xl flex gap-2">
       <input
         bind:value={new_name}
         placeholder="New timer name..."
-        class="flex-1 rounded-xl border border-foreground/10 bg-transparent px-4 py-2.5 text-foreground placeholder:text-foreground/30 outline-none focus:border-primary/50 transition-colors"
+        class="flex-1 rounded-xl bg-background-dark px-4 py-2.5 text-foreground placeholder:text-foreground/30 outline-none focus:border-primary/50 transition-colors"
       />
       <button
         type="submit"
-        class="flex items-center justify-center size-12 shrink-0 select-none rounded-xl border border-foreground/10 text-primary
+        class="flex items-center justify-center size-12 shrink-0 select-none rounded-xl bg-secondary text-background
                shadow-[0_2px_0_0_rgba(255,255,255,0.06)]
                transition-all duration-100
-               active:scale-90 active:brightness-125 active:bg-primary/20 active:shadow-none active:translate-y-[2px]"
+               active:scale-90 active:brightness-125 active:shadow-none active:translate-y-[2px]"
       >
         <Plus class="size-5" />
       </button>
     </form>
-
-    <div class="flex flex-col gap-4">
-      {#each timer_store.timers as timer (timer.id)}
-        <TimerCard {timer} />
-      {/each}
-    </div>
-
-    {#if timer_store.timers.length === 0}
-      <p class="text-center text-foreground/30 py-8">No timers yet. Create one above.</p>
-    {/if}
   </div>
 </div>
