@@ -9,6 +9,7 @@
     from_datetime_local,
     haptic,
   } from "$lib/utils";
+  import SessionCharts from "./session-charts.svelte";
 
   interface Props {
     timer: TimerData;
@@ -192,12 +193,13 @@
       </div>
     </div>
 
-    <!-- Session log -->
-    <div class="flex-1 min-h-0 flex flex-col px-4">
+    <!-- Charts + Session log -->
+    <div class="flex-1 min-h-0 flex flex-col px-4 overflow-y-auto gap-4">
       {#if timer.sessions.length > 0}
-        <h3 class="text-sm text-foreground/50 mb-2">Sessions</h3>
-        <div class="flex-1 min-h-0 flex flex-col rounded-xl border border-foreground/10 px-4">
-          <div class="flex-1 min-h-0 overflow-y-auto py-1">
+        <SessionCharts sessions={timer.sessions} />
+        <h3 class="text-sm text-foreground/50">Sessions</h3>
+        <div class="flex flex-col rounded-xl border border-foreground/10 px-4">
+          <div class="py-1">
             {#each timer.sessions.toReversed() as session, ri}
               {@const real_index = timer.sessions.length - 1 - ri}
               <div class="flex items-center py-2 text-sm gap-2">
